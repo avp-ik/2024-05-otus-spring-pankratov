@@ -6,7 +6,7 @@
 
 
     <groupId>ru.otus.hw</groupId>
-    <artifactId>hw01-xml-config</artifactId>
+    <artifactId>hw01</artifactId>
     <version>1.0</version>
 
     <properties>
@@ -110,6 +110,7 @@
                 <!--Закопался, до конца не разобрался-->
                 <!--https://ru.stackoverflow.com/questions/866402/unable-to-locate-spring-namespacehandler-for-xml-schema-->
                 <!--https://stackoverflow.com/questions/574594/how-can-i-create-an-executable-runnable-jar-with-dependencies-using-maven-->
+                <!--https://habr.com/ru/companies/otus/articles/563860/-->
                 <executions>
                     <execution>
                         <phase>package</phase>
