@@ -34,25 +34,9 @@ public class CsvQuestionDao implements QuestionDao {
         List<Question> questions = new ArrayList<>();
 
         try {
-            InputStream stream = getClass().getClassLoader().getResourceAsStream(fileNameProvider.getTestFileName());
-
-            if (stream == null) {
-                System.out.println("File " + fileNameProvider.getTestFileName() + " not found.");
-                return null;
-            }
-
-            Reader reader = new InputStreamReader(stream);
-
-            CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
-
-            CsvToBean<QuestionDto> csvToBean = new CsvToBeanBuilder(reader)
-                    .withType(QuestionDto.class)
-                    .withSkipLines(1)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .withSeparator(';')
-                    .build();
-
-            Iterator<QuestionDto> questionDtoIterator = csvToBean.iterator();
+            // getQuestionDtoIterator() может вернуть null, но в этом случае выведится
+            // сообщение File not found и перехватится исключение.
+            Iterator<QuestionDto> questionDtoIterator = getQuestionDtoIterator();
 
             while (questionDtoIterator.hasNext()) {
                 QuestionDto questionDto = questionDtoIterator.next();
@@ -64,5 +48,27 @@ public class CsvQuestionDao implements QuestionDao {
         }
 
         return questions;
+    }
+
+    private Iterator<QuestionDto> getQuestionDtoIterator() {
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(fileNameProvider.getTestFileName());
+
+        if (stream == null) {
+            System.out.println("File " + fileNameProvider.getTestFileName() + " not found.");
+            return null;
+        }
+
+        Reader reader = new InputStreamReader(stream);
+
+        CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
+
+        CsvToBean<QuestionDto> csvToBean = new CsvToBeanBuilder(reader)
+                .withType(QuestionDto.class)
+                .withSkipLines(1)
+                .withIgnoreLeadingWhiteSpace(true)
+                .withSeparator(';')
+                .build();
+
+        return csvToBean.iterator();
     }
 }

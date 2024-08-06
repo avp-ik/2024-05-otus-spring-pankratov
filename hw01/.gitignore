@@ -1,8 +1,9 @@
 target/
 out/
-main/resources/META-INF/
+META-INF/
 dependency-reduced-pom.xml
 *.MF
+*.jar
 
 ### STS ###
 .apt_generated
