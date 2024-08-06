@@ -22,7 +22,7 @@ public class TestServiceImplTest {
         TestServiceImpl testServiceImpl = new TestServiceImpl(ioService, questionDao);
 
         assertTrue(ioService != null);
-        assertTrue(questionDao != null);
+        assertTrue(questionDao.findAll().size() == 3);
         assertTrue(testServiceImpl != null);
     }
 }
