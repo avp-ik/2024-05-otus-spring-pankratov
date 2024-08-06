@@ -24,8 +24,10 @@ public class TestServiceImpl implements TestService {
         List<Question> questions = questionDao.findAll();
         for (Question question : questions) {
             ioService.printLine(question.text());
+            var questionNumber = 1;
             for (Answer answer : question.answers()) {
-                ioService.printLine(" - " + answer.text());
+                ioService.printLine(" " + questionNumber + ". " + answer.text());
+                questionNumber++;
             }
             ioService.printLine("");
         }

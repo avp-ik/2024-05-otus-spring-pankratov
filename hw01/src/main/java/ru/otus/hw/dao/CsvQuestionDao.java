@@ -36,6 +36,11 @@ public class CsvQuestionDao implements QuestionDao {
         try {
             InputStream stream = getClass().getClassLoader().getResourceAsStream(fileNameProvider.getTestFileName());
 
+            if (stream == null) {
+                System.out.println("File " + fileNameProvider.getTestFileName() + " not found.");
+                return null;
+            }
+
             Reader reader = new InputStreamReader(stream);
 
             CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();

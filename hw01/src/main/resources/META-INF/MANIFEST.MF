@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: ru.otus.hw.Application
-Class-Path: spring-expression-6.1.6.jar commons-logging-1.2.jar commons-
- collections4-4.4.jar lombok-1.18.32.jar spring-aop-6.1.6.jar spring-bea
- ns-6.1.6.jar spring-core-6.1.6.jar spring-jcl-6.1.6.jar commons-beanuti
- ls-1.9.4.jar micrometer-observation-1.12.5.jar opencsv-5.9.jar commons-
- lang3-3.13.0.jar spring-context-6.1.6.jar commons-text-1.11.0.jar micro
- meter-commons-1.12.5.jar
-

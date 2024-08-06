@@ -1,5 +1,6 @@
 target/
 out/
+main/resources/META-INF/
 dependency-reduced-pom.xml
 
 ### STS ###
