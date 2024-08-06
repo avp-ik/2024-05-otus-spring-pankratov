@@ -30,45 +30,60 @@ public class CsvQuestionDao implements QuestionDao {
         // https://opencsv.sourceforge.net/#collection_based_bean_fields_one_to_many_mappings
         // Использовать QuestionReadException
         // Про ресурсы: https://mkyong.com/java/java-read-a-file-from-resources-folder/
-
-        List<Question> questions = new ArrayList<>();
-
+        List<Question> questions = null;
         try {
-            // getQuestionDtoIterator() может вернуть null, но в этом случае выведится
-            // сообщение File not found и перехватится исключение.
-            Iterator<QuestionDto> questionDtoIterator = getQuestionDtoIterator();
-
-            while (questionDtoIterator.hasNext()) {
-                QuestionDto questionDto = questionDtoIterator.next();
-                Question question = questionDto.toDomainObject();
-                questions.add(question);
+            if (fileNameProvider.getTestFileName().isEmpty()) {
+                throw new Exception("The file name is not defined");
+            }
+            try (InputStream stream = getClass()
+                    .getClassLoader()
+                    .getResourceAsStream(fileNameProvider.getTestFileName())) {
+                if (stream == null) {
+                    throw new Exception("File " + fileNameProvider.getTestFileName() + " not found.");
+                }
+                questions = getQuestionList(stream);
             }
         } catch (Exception e) {
             throw new QuestionReadException("Error to read file" + fileNameProvider.getTestFileName(), e);
         }
-
         return questions;
     }
 
-    private Iterator<QuestionDto> getQuestionDtoIterator() {
-        InputStream stream = getClass().getClassLoader().getResourceAsStream(fileNameProvider.getTestFileName());
+    private List<Question> getQuestionList(InputStream inputStream) throws Exception {
+        List<Question> questions = new ArrayList<>();
+        if (inputStream == null) {
+            throw new Exception("Internal error: wrong inputStream");
+        }
+        Reader reader = new InputStreamReader(inputStream);
+        try (CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build()) {
+            if (csvReader == null) {
+                throw new Exception("Internal error: couldn't initiate csvReader");
+            }
+            CsvToBean<QuestionDto> csvToBean = new CsvToBeanBuilder(reader)
+                    .withType(QuestionDto.class)
+                    .withSkipLines(1)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withSeparator(';')
+                    .build();
+            if (csvToBean == null) {
+                throw new Exception("Error of reading of file " + fileNameProvider.getTestFileName());
+            }
+            questions = convertIteratorToQuestionList(csvToBean.iterator());
+            return questions;
+        }
+    }
 
-        if (stream == null) {
-            System.out.println("File " + fileNameProvider.getTestFileName() + " not found.");
-            return null;
+    private List<Question> convertIteratorToQuestionList (Iterator<QuestionDto> questionDtoIterator) throws Exception {
+        List<Question> questions = new ArrayList<>();
+        if (questionDtoIterator == null) {
+            throw new Exception("Internal error: wrong iterator");
         }
 
-        Reader reader = new InputStreamReader(stream);
-
-        CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
-
-        CsvToBean<QuestionDto> csvToBean = new CsvToBeanBuilder(reader)
-                .withType(QuestionDto.class)
-                .withSkipLines(1)
-                .withIgnoreLeadingWhiteSpace(true)
-                .withSeparator(';')
-                .build();
-
-        return csvToBean.iterator();
+        while (questionDtoIterator.hasNext()) {
+            QuestionDto questionDto = questionDtoIterator.next();
+            Question question = questionDto.toDomainObject();
+            questions.add(question);
+        }
+        return questions;
     }
 }
