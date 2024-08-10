@@ -19,6 +19,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class CsvQuestionDao implements QuestionDao {
@@ -31,18 +32,15 @@ public class CsvQuestionDao implements QuestionDao {
         // Использовать QuestionReadException
         // Про ресурсы: https://mkyong.com/java/java-read-a-file-from-resources-folder/
         List<Question> questions = null;
-        try {
-            if (fileNameProvider.getTestFileName().isEmpty()) {
-                throw new Exception("The file name is not defined");
-            }
-            try (InputStream stream = getClass()
+
+        try (InputStream stream = Objects.requireNonNull(getClass()
                     .getClassLoader()
-                    .getResourceAsStream(fileNameProvider.getTestFileName())) {
+                    .getResourceAsStream(fileNameProvider.getTestFileName()), "File not defined.")) {
                 if (stream == null) {
                     throw new Exception("File " + fileNameProvider.getTestFileName() + " not found.");
                 }
                 questions = getQuestionList(stream);
-            }
+
         } catch (Exception e) {
             throw new QuestionReadException("Error to read file" + fileNameProvider.getTestFileName(), e);
         }
