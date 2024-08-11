@@ -22,11 +22,9 @@ public class TestServiceImpl implements TestService {
     @Override
     public TestResult executeTestFor(Student student) {
         var testResult = new TestResult(student);
-
         ioService.printLine("");
         ioService.printFormattedLine("Please answer the questions below%n");
 
-        // Получить вопросы из дао и вывести их с вариантами ответов
         List<Question> questions = questionDao.findAll();
         for (Question question : questions) {
             ioService.printLine(question.text());
@@ -35,14 +33,11 @@ public class TestServiceImpl implements TestService {
                 ioService.printLine(" " + questionNumber + ". " + answer.text());
                 questionNumber++;
             }
-
             var answerOfStudent = ioService.readIntForRangeWithPrompt(1,
                     (int)question.answers().stream().count(),
                     "What's is your answer?",
                     "");
-
             testResult.applyAnswer(question, question.answers().get(answerOfStudent - 1).isCorrect());
-
             ioService.printLine("");
         }
 
