@@ -1,16 +1,9 @@
 package ru.otus.hw.service;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import ru.otus.hw.Application;
-import ru.otus.hw.config.AppConfig;
-import ru.otus.hw.dao.CsvQuestionDao;
+import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
@@ -18,76 +11,18 @@ import ru.otus.hw.domain.TestResult;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-@PropertySource("classpath:application.properties")
-@ComponentScan
-@Configuration
-@DisplayName("Класс TestServiceImpl")
-public class TestServiceImplTest {
+class TestServiceImplTest {
 
-    private static AppConfig appConfig;
-    private static StreamsIOService ioService;
-    private static CsvQuestionDao questionDao;
+    private TestService testService;
 
-    @BeforeAll
-    static void setUp() {
-        AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(Application.class);
-        appConfig = context.getBean(AppConfig.class);
-        questionDao = context.getBean(CsvQuestionDao.class);
-    }
-
-    @DisplayName("корректно создаётся конструктором")
-    @Test
-    void shouldHaveCorrectConstructor() {
-
-        TestServiceImpl testServiceImpl = new TestServiceImpl(ioService, questionDao);
-
-        assertTrue(testServiceImpl != null);
-    }
-
-    @DisplayName("корректно выполняется успешный тест (3 из 3)")
-    @Test
-    void executeSuccessTest() {
-        TestServiceImplTest.setRightAnswers();
-
-        TestServiceImpl testServiceImpl = new TestServiceImpl(ioService, questionDao);
-
-        TestResult testResult = testServiceImpl.executeTestFor(new Student("Ivan", "Ivanov"));
-
-        assertTrue(testResult.getAnsweredQuestions().size() == testResult.getRightAnswersCount());
-    }
-
-    @DisplayName("корректно выполняется неуспешный тест (2 из 3)")
-    @Test
-    void executeWrongTest() {
-        TestServiceImplTest.setWrongAnswers();
-
-        TestServiceImpl testServiceImpl = new TestServiceImpl(ioService, questionDao);
-
-        TestResult testResult = testServiceImpl.executeTestFor(new Student("Ivan", "Ivanov"));
-
-        assertTrue(testResult.getAnsweredQuestions().size() != testResult.getRightAnswersCount());
-    }
-
-    static private void setRightAnswers() {
-        TestServiceImplTest.ioService = Mockito.mock(StreamsIOService.class);
-        Mockito.when(ioService.readIntForRangeWithPrompt(1, 3, "What's is your answer?", ""))
+    @BeforeEach
+    void setUp() {
+        LocalizedIOService localizedIOServiceImpl = Mockito.mock(LocalizedIOServiceImpl.class);
+        Mockito.when(localizedIOServiceImpl.readIntForRangeWithPrompt(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(1);
-        Mockito.when(ioService.readIntForRangeWithPrompt(1, 4, "What's is your answer?", ""))
-                .thenReturn(3);
-    }
 
-    static private void setWrongAnswers() {
-        TestServiceImplTest.ioService = Mockito.mock(StreamsIOService.class);
-        Mockito.when(ioService.readIntForRangeWithPrompt(1, 3, "What's is your answer?", ""))
-                .thenReturn(1);
-        Mockito.when(ioService.readIntForRangeWithPrompt(1, 4, "What's is your answer?", ""))
-                .thenReturn(1);
-    }
-
-    static private  List<Question> getTestListOfQuestion() {
         List<Question> questionList = List.of(
                 new Question("Is there life on Mars?", List.of(
                         new Answer("Science doesn't know this yet", true),
@@ -101,8 +36,18 @@ public class TestServiceImplTest {
                         new Answer("@SneakyThrow", false),
                         new Answer("e.printStackTrace()", false),
                         new Answer("Rethrow with wrapping in business exception (for example, QuestionReadException)", true),
-                        new Answer("Ignoring exception", false)))
-        );
-        return questionList;
+                        new Answer("Ignoring exception", false))));
+
+        QuestionDao questionDao = Mockito.mock(QuestionDao.class);
+        Mockito.when(questionDao.findAll()).thenReturn(questionList);
+
+        testService = new TestServiceImpl(localizedIOServiceImpl, questionDao);
+    }
+
+    @Test
+    void executeTestFor() {
+        Student student = new Student("Ivan", "Ivanov");
+        TestResult testResult = testService.executeTestFor(student);
+        assertEquals(2, testResult.getRightAnswersCount());
     }
 }
