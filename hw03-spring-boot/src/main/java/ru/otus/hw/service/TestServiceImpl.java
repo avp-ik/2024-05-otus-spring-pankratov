@@ -2,6 +2,7 @@ package ru.otus.hw.service;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
@@ -10,20 +11,20 @@ import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
 public class TestServiceImpl implements TestService {
 
     private final LocalizedIOService ioService;
-
     private final QuestionDao questionDao;
 
     @Override
     public TestResult executeTestFor(Student student) {
         var testResult = new TestResult(student);
         ioService.printLine("");
-        ioService.printFormattedLine("Please answer the questions below%n");
+        ioService.printFormattedLineLocalized("TestService.answer.the.questions");
 
         List<Question> questions = questionDao.findAll();
         for (Question question : questions) {
@@ -33,10 +34,10 @@ public class TestServiceImpl implements TestService {
                 ioService.printLine(" " + questionNumber + ". " + answer.text());
                 questionNumber++;
             }
-            var answerOfStudent = ioService.readIntForRangeWithPrompt(1,
+            var answerOfStudent = ioService.readIntForRangeWithPromptLocalized(1,
                     (int)question.answers().stream().count(),
-                    "What's is your answer?",
-                    "");
+                    "TestService.ask.the.answer",
+                    "TestService.error.of.getting.answer");
             testResult.applyAnswer(question, question.answers().get(answerOfStudent - 1).isCorrect());
             ioService.printLine("");
         }

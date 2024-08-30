@@ -20,7 +20,7 @@ class TestServiceImplTest {
     @BeforeEach
     void setUp() {
         LocalizedIOService localizedIOServiceImpl = Mockito.mock(LocalizedIOServiceImpl.class);
-        Mockito.when(localizedIOServiceImpl.readIntForRangeWithPrompt(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(localizedIOServiceImpl.readIntForRangeWithPromptLocalized(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(1);
 
         List<Question> questionList = List.of(
