@@ -24,9 +24,9 @@ public class TestRunnerServiceImpl implements CommandLineRunner {
             var testResult = testService.executeTestFor(student);
             resultService.showResult(testResult);
         } catch (QuestionReadException e) {
-            ioService.printLine("Error reading questions");
+            ioService.printFormattedLineLocalized("TestRunnerServiceImpl.error.of.reading.questions");
         } catch (Throwable e) {
-            ioService.printLine("Unknown error");
+            ioService.printFormattedLineLocalized("TestRunnerServiceImpl.unknown.error");
         }
     }
 }
