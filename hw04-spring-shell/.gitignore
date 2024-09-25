@@ -1,10 +1,5 @@
 target/
-out/
-META-INF/
 dependency-reduced-pom.xml
-*.MF
-*.jar
-*.log
 
 ### STS ###
 .apt_generated
