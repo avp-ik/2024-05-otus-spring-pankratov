@@ -1,7 +1,6 @@
 package ru.otus.hw.repositories;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -23,8 +22,6 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class JdbcBookRepository implements BookRepository {
-
-    private final JdbcOperations jdbc;
 
     private final NamedParameterJdbcOperations namedParameterJdbc;
 
@@ -61,7 +58,7 @@ public class JdbcBookRepository implements BookRepository {
                 "  books as b \n" +
                 "  left join authors as a on b.author_id = a.id \n" +
                 "  left join genres as g on b.genre_id = g.id\n";
-        return jdbc.query(request, new BookRowMapper());
+        return namedParameterJdbc.query(request, new BookRowMapper());
     }
 
     @Override

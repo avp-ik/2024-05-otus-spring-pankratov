@@ -1,7 +1,6 @@
 package ru.otus.hw.repositories;
 
 import lombok.AllArgsConstructor;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
@@ -18,21 +17,19 @@ import java.util.Collections;
 @AllArgsConstructor
 public class JdbcGenreRepository implements GenreRepository {
 
-    private final JdbcOperations jdbc;
-
     private final NamedParameterJdbcOperations namedParameterJdbc;
 
     @Override
     public List<Genre> findAll() {
-        return jdbc.query("select id, name from genres", new GenreRowMapper());
+        return namedParameterJdbc.query("select id, name from genres", new GenreRowMapper());
     }
 
     @Override
     public Optional<Genre> findById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        Genre genre = namedParameterJdbc.queryForObject(
+        List<Genre> genres = namedParameterJdbc.query(
                 "select id, name from genres where id = :id", params, new GenreRowMapper());
-        return Optional.ofNullable(genre);
+        return Optional.ofNullable(genres.get(0));
     }
 
     private static class GenreRowMapper implements RowMapper<Genre> {
