@@ -31,9 +31,9 @@ public class BookCommands {
                 .orElse("Book with id %d not found".formatted(id));
     }
 
-    @ShellMethod(value = "Insert book", key = "bins")
-    public String insertBook(String title, long authorId, long genreId) {
-        var savedBook = bookService.insert(title, authorId, genreId);
+    @ShellMethod(value = "Create book", key = "bcre")
+    public String createBook(String title, long authorId, long genreId) {
+        var savedBook = bookService.create(title, authorId, genreId);
         return bookConverter.bookToString(savedBook);
     }
 

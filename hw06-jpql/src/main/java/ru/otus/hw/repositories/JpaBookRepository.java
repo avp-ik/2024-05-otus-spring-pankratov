@@ -1,5 +1,6 @@
 package ru.otus.hw.repositories;
 
+import jakarta.persistence.EntityGraph;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -8,9 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Book;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.FETCH;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,14 +25,19 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public Optional<Book> findById(long id) {
-        return Optional.ofNullable(em.find(Book.class, id));
+        // https://www.baeldung.com/jpa-entity-graph
+        EntityGraph entityGraph = em.getEntityGraph("book-author-genre-entity-graph");
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("jakarta.persistence.fetchgraph", entityGraph);
+        return Optional.ofNullable(em.find(Book.class, id, properties));
     }
 
     @Override
     public List<Book> findAll() {
-        TypedQuery<Book> query = em.createQuery("select b from Book b " +
-                "left join fetch b.author " +
-                "left join fetch b.genre", Book.class);
+        EntityGraph<?> entityGraph = em.getEntityGraph("book-author-genre-entity-graph");
+
+        TypedQuery<Book> query = em.createQuery("select b from Book b ", Book.class);
+        query.setHint(FETCH.getKey(), entityGraph);
         return query.getResultList();
     }
 
