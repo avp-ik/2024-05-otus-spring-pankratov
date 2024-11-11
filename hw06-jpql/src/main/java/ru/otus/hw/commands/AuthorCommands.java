@@ -22,4 +22,9 @@ public class AuthorCommands {
                 .map(authorConverter::authorToString)
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
+
+    @ShellMethod(value = "Number of authors", key = "ca")
+    public Long countAuthors() {
+        return authorService.count();
+    }
 }
