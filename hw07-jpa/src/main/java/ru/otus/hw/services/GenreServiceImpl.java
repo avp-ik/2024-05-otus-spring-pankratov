@@ -18,4 +18,10 @@ public class GenreServiceImpl implements GenreService {
     public List<Genre> findAll() {
         return genreRepository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Long count() {
+        return genreRepository.count();
+    }
 }

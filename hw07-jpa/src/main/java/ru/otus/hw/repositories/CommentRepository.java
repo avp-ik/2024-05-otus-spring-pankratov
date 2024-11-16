@@ -1,16 +1,15 @@
 package ru.otus.hw.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.otus.hw.models.Comment;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface CommentRepository {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByBookId(long bookId);
 
-    Optional<Comment> findById(long id);
-
-    Comment save(Comment comment);
-
-    void deleteById(long id);
+    @Query("select c from Comment as c where c.book.id = :bookId and c.book.genre.id = :genreId ")
+    List<Comment> findAllByBookIdAndGenreId(@Param("bookId") long bookId, @Param("genreId") long genreId);
 }

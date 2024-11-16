@@ -22,3 +22,6 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+  shell:
+    interactive:
+      enabled: false

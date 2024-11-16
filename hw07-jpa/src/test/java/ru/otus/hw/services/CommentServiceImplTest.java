@@ -1,57 +1,57 @@
 package ru.otus.hw.services;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.hw.repositories.JpaBookRepository;
-import ru.otus.hw.repositories.JpaCommentRepository;
+import ru.otus.hw.converters.BookConverter;
+import ru.otus.hw.converters.CommentConverter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @DisplayName("Тестирование CommentServiceImpl")
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.yml")
-//@Import({CommentServiceImplTest.class})
 public class CommentServiceImplTest {
     @Autowired
     private CommentService commentService;
-//
-//    @Autowired
-//    private CommentConverter commentConverter;
-//
-//    @Autowired
-//    private BookService bookService;
-//
-//    @Autowired
-//    private BookConverter bookConverter;
 
-    @BeforeEach
-    void setUp() {
-        String text = "SomeBooks";
-        Long bookId = 10L;
+    @Autowired
+    private CommentConverter commentConverter;
 
-        //var savedComment = commentService.insert(text, bookId);
-        //assertEquals(savedComment.getText(), text);
-        //assertEquals(savedComment.getBook().getId(), bookId);
-        //assertEquals(2, 2);
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private BookConverter bookConverter;
+
+    private final Long BOOK_ID_FOR_TEST = 1L;
+    private final Long GENRE_ID_FOR_TEST = 1L;
+    private final String COMMENT_TEXT_FOR_TEST = "Some comment.";
+
+    @DisplayName("Проверить сохранение Comment")
+    @Test
+    void insertCommentsOfBook() {
+        var savedComments = commentService.findAllByBookId(BOOK_ID_FOR_TEST);
+        var initialNumberOfComments = savedComments.stream().count();
+
+        var savedComment = commentService.insert(COMMENT_TEXT_FOR_TEST, BOOK_ID_FOR_TEST);
+        assertEquals(savedComment.getText(), COMMENT_TEXT_FOR_TEST);
+        assertEquals(savedComment.getBook().getId(), BOOK_ID_FOR_TEST);
+
+        savedComments = commentService.findAllByBookId(BOOK_ID_FOR_TEST);
+        assertEquals(savedComments.stream().count(), initialNumberOfComments + 1);
     }
 
+    @DisplayName("Получить Comment по bookId и genreId")
     @Test
-    void countCommentsOfBook() {
-        Long bookId = 10L;
+    void getCommentsOfBookAndGenre() {
+        var savedComments = commentService.findAllByBookIdAndGenreId(BOOK_ID_FOR_TEST, GENRE_ID_FOR_TEST);
 
-        var savedComments = commentService.findAllByBookId(bookId);
-        assertEquals(savedComments.stream().count(), 1);
-        //assertEquals(2, 2);
+        assertNotEquals(savedComments.stream().count(), 0);
     }
 }

@@ -27,6 +27,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     @Override
+    public List<Comment> findAllByBookIdAndGenreId(long bookId, long genreId) {
+        return commentRepository.findAllByBookIdAndGenreId(bookId, genreId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Optional<Comment> findCommentById(long id) {
         return commentRepository.findById(id);
     }
@@ -50,13 +56,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public Comment update(long id, String text/*, long bookId*/) {
-        //Book book = bookRepository.findById(bookId)
-        //        .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
+    public Comment update(long id, String text) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Comment with id %d not found".formatted(id)));
         comment.setText(text);
-        //comment.setBook(book);
         return commentRepository.save(comment);
     }
 }

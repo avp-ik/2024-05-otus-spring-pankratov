@@ -22,4 +22,9 @@ public class GenreCommands {
                 .map(genreConverter::genreToString)
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
+
+    @ShellMethod(value = "Number of genres", key = "cg")
+    public Long countAuthors() {
+        return genreService.count();
+    }
 }

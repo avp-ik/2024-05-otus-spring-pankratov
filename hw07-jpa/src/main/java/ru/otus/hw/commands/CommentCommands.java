@@ -29,6 +29,14 @@ public class CommentCommands {
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
 
+
+    @ShellMethod(value = "Find all comment by book id and genre id", key = "acbbidgid")
+    public String findAllCommentByBookIdAndGenreId(long bookId, long genreId) {
+        return commentService.findAllByBookIdAndGenreId(bookId, genreId).stream()
+                .map(commentConverter::commentToString)
+                .collect(Collectors.joining("," + System.lineSeparator()));
+    }
+
     @ShellMethod(value = "Insert comment", key = "cins")
     public String insertComment(String text, long bookId) {
         var savedComment = commentService.insert(text, bookId);

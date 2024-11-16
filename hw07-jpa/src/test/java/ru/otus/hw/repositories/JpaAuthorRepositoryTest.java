@@ -17,11 +17,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе Jpa для работы с авторами ")
 @DataJpaTest
-@Import({JpaAuthorRepository.class, JpaGenreRepository.class})
 public class JpaAuthorRepositoryTest {
 
     @Autowired
-    private JpaAuthorRepository repositoryJpa;
+    private AuthorRepository repositoryJpa;
 
     private List<Author> dbAuthors;
 

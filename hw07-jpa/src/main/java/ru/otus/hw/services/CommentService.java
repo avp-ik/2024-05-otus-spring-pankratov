@@ -8,12 +8,14 @@ import java.util.Optional;
 public interface CommentService {
     List<Comment> findAllByBookId(long bookId);
 
+    List<Comment> findAllByBookIdAndGenreId(long bookId, long genreId);
+
     Optional<Comment> findCommentById(long id);
 
     Comment insert(String text, long authorId);
 
     void deleteById(long id);
 
-    Comment update(long id, String text/*, long authorId*/);
+    Comment update(long id, String text);
 
 }
