@@ -47,10 +47,10 @@ public class CommentServiceImplTest {
         assertEquals(savedComments.stream().count(), initialNumberOfComments + 1);
     }
 
-    @DisplayName("Получить Comment по bookId и genreId")
+    @DisplayName("Получить Comment по bookId или genreId")
     @Test
-    void getCommentsOfBookAndGenre() {
-        var savedComments = commentService.findAllByBookIdAndGenreId(BOOK_ID_FOR_TEST, GENRE_ID_FOR_TEST);
+    void getCommentsOfBookOrGenre() {
+        var savedComments = commentService.findAllByBookIdOrGenreId(BOOK_ID_FOR_TEST, GENRE_ID_FOR_TEST);
 
         assertNotEquals(savedComments.stream().count(), 0);
     }

@@ -30,9 +30,9 @@ public class CommentCommands {
     }
 
 
-    @ShellMethod(value = "Find all comment by book id and genre id", key = "acbbidgid")
-    public String findAllCommentByBookIdAndGenreId(long bookId, long genreId) {
-        return commentService.findAllByBookIdAndGenreId(bookId, genreId).stream()
+    @ShellMethod(value = "Find all comment by book id or genre id", key = "acbbidgid")
+    public String findAllCommentByBookIdOrGenreId(long bookId, long genreId) {
+        return commentService.findAllByBookIdOrGenreId(bookId, genreId).stream()
                 .map(commentConverter::commentToString)
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }

@@ -13,10 +13,15 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedAttributeNode;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.EqualsAndHashCode;
 
-@Data
+
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
