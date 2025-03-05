@@ -21,25 +21,25 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Comment> findAllByBookId(long bookId) {
+    public List<Comment> findAllByBookId(String bookId) {
         return commentRepository.findAllByBookId(bookId);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<Comment> findAllByBookIdOrGenreId(long bookId, long genreId) {
-        return commentRepository.findAllByBookIdOrGenreId(bookId, genreId);
+    public List<Comment> findAllByCommentText(String commentText) {
+        return commentRepository.findAllByCommentText(commentText);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Comment> findCommentById(long id) {
+    public Optional<Comment> findCommentById(String id) {
         return commentRepository.findById(id);
     }
 
     @Transactional
     @Override
-    public Comment insert(String text, long bookId) {
+    public Comment insert(String text, String bookId) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
         Comment comment = new Comment();
@@ -50,13 +50,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         commentRepository.deleteById(id);
     }
 
     @Transactional
     @Override
-    public Comment update(long id, String text) {
+    public Comment update(String id, String text) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Comment with id %d not found".formatted(id)));
         comment.setText(text);
