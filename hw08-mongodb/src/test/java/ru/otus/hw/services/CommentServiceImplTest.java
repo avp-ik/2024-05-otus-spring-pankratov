@@ -39,16 +39,13 @@ public class CommentServiceImplTest {
     @Autowired
     private GenreConverter genreConverter;
 
-    private String bookIdForTest = "";
-    private String commentTextForTest = "Отличная книга!";
-
     @DisplayName("Проверить сохранение Comment")
     @Test
     void insertCommentsOfBook() {
         var savedBooks = bookService.findAll();
-        var savedGenres = genreService.findAll();
 
-        bookIdForTest = savedBooks.get(0).getId();
+        var bookIdForTest = savedBooks.get(0).getId();
+        var commentTextForTest = "Отличная книга!";
 
         var savedComments = commentService.findAllByBookId(bookIdForTest);
         var initialNumberOfComments = savedComments.stream().count();
@@ -64,7 +61,7 @@ public class CommentServiceImplTest {
     @DisplayName("Получить Comment по bookId или genreId")
     @Test
     void getCommentsOfBookOrGenre() {
-        commentTextForTest = "Отличная книга!";
+        var commentTextForTest = "Отличная книга!";
 
         var savedComments = commentService.findAllByCommentText(commentTextForTest);
         assertNotEquals(savedComments.stream().count(), 0);

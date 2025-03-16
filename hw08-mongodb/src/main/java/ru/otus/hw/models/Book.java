@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
 @Setter
@@ -17,13 +16,10 @@ public class Book {
     @Id
     private String id;
 
-    @Field(name = "title")
     private String title;
 
-    @Field(name = "author_id")
     private Author author;
 
-    @Field(name = "genre_id")
     private Genre genre;
 
     public Book(String title, Author author, Genre genre) {
