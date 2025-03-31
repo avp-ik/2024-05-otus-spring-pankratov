@@ -2,9 +2,11 @@ package ru.otus.hw.mappers;
 
 import org.springframework.stereotype.Component;
 import ru.otus.hw.dto.AuthorDto;
+import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.CommentDto;
-import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.dto.BookCreateDto;
+import ru.otus.hw.dto.BookUpdateDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
@@ -62,6 +64,38 @@ public class DtoMapperImpl implements DtoMapper {
         bookDto.setGenre(toGenreDto(book.getGenre()));
 
         return bookDto;
+    }
+
+    @Override
+    public BookCreateDto toBookCreateDto(BookDto bookDto) {
+        if (bookDto == null) {
+            return null;
+        }
+
+        BookCreateDto bookCreateDto = new BookCreateDto();
+
+        bookCreateDto.setId(bookDto.getId());
+        bookCreateDto.setTitle(bookDto.getTitle());
+        bookCreateDto.setAuthorId(bookDto.getAuthor().getId());
+        bookCreateDto.setGenreId(bookDto.getGenre().getId());
+
+        return bookCreateDto;
+    }
+
+    @Override
+    public BookUpdateDto toBookUpdateDto(BookDto bookDto) {
+        if (bookDto == null) {
+            return null;
+        }
+
+        BookUpdateDto bookUpdateDto = new BookUpdateDto();
+
+        bookUpdateDto.setId(bookDto.getId());
+        bookUpdateDto.setTitle(bookDto.getTitle());
+        bookUpdateDto.setAuthorId(bookDto.getAuthor().getId());
+        bookUpdateDto.setGenreId(bookDto.getGenre().getId());
+
+        return bookUpdateDto;
     }
 
     @Override

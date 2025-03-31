@@ -7,9 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.hw.dto.AuthorDto;
-import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.dto.*;
+import ru.otus.hw.mappers.DtoMapper;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
@@ -40,6 +39,9 @@ class BookControllerTest {
     @MockBean
     private GenreService genreService;
 
+    @MockBean
+    private DtoMapper dtoMapper;
+
     private List<AuthorDto> dbAuthors = new ArrayList<>();
 
     private List<GenreDto> dbGenres = new ArrayList<>();
@@ -54,30 +56,31 @@ class BookControllerTest {
     @DisplayName("Сохранить новую книгу")
     @Test
     void createBook() throws Exception {
-        BookDto book = new BookDto(0,"Война и мир", dbAuthors.get(1), dbGenres.get(1));
+        BookCreateDto bookCreateDto = new BookCreateDto(0,"Война и мир", dbAuthors.get(1).getId(), dbGenres.get(1).getId());
 
-        mockMvc.perform(post("/book/create").flashAttr("book", book))
+        mockMvc.perform(post("/book/create").flashAttr("bookCreateDto", bookCreateDto))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        verify(bookService, times(1)).create(book);
+        verify(bookService, times(1)).create(bookCreateDto);
     }
 
     @DisplayName("Сохранить измененную книгу")
     @Test
     void updatedBook() throws Exception {
-        BookDto book = dbBooks.get(2);
-        book.setTitle("Детство. Отрочество. Юность.");
-        book.setAuthor(dbAuthors.get(0));
-        book.setGenre(dbGenres.get(0));
+        BookUpdateDto bookUpdateDto = new BookUpdateDto();
+        bookUpdateDto.setId(dbBooks.get(2).getId());
+        bookUpdateDto.setTitle("Детство. Отрочество. Юность.");
+        bookUpdateDto.setAuthorId(dbAuthors.get(0).getId());
+        bookUpdateDto.setGenreId(dbGenres.get(0).getId());
 
-        mockMvc.perform(put("/book/update").flashAttr("book", book))
+        mockMvc.perform(put("/book/update").flashAttr("bookUpdateDto", bookUpdateDto))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        verify(bookService, times(1)).update(book);
+        verify(bookService, times(1)).update(bookUpdateDto);
     }
 
     @DisplayName("Удалить книгу по id")
