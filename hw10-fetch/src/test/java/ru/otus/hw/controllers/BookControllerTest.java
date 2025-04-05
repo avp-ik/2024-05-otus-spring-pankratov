@@ -1,12 +1,15 @@
 package ru.otus.hw.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.otus.hw.dto.*;
 import ru.otus.hw.mappers.DtoMapper;
 import ru.otus.hw.services.AuthorService;
@@ -16,8 +19,7 @@ import ru.otus.hw.services.GenreService;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -48,6 +50,9 @@ class BookControllerTest {
 
     private List<BookDto> dbBooks = new ArrayList<>();
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @BeforeEach
     void setUp() {
         generateTestData();
@@ -56,12 +61,27 @@ class BookControllerTest {
     @DisplayName("Сохранить новую книгу")
     @Test
     void createBook() throws Exception {
-        BookCreateDto bookCreateDto = new BookCreateDto(0,"Война и мир", dbAuthors.get(1).getId(), dbGenres.get(1).getId());
+        var title = "Война и мир";
+        var author = dbAuthors.get(1);
+        var genre = dbGenres.get(1);
 
-        mockMvc.perform(post("/book/create").flashAttr("bookCreateDto", bookCreateDto))
+        BookCreateDto bookCreateDto = new BookCreateDto(title,
+                author.getId(),
+                genre.getId());
+
+        BookDto bookDto = new BookDto(100,
+                title,
+                author,
+                genre);
+
+        doReturn(bookDto).when(bookService).create(bookCreateDto);
+
+        mockMvc.perform(post("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(bookCreateDto)))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(bookDto)));
 
         verify(bookService, times(1)).create(bookCreateDto);
     }
@@ -69,16 +89,24 @@ class BookControllerTest {
     @DisplayName("Сохранить измененную книгу")
     @Test
     void updatedBook() throws Exception {
-        BookUpdateDto bookUpdateDto = new BookUpdateDto();
-        bookUpdateDto.setId(dbBooks.get(2).getId());
-        bookUpdateDto.setTitle("Детство. Отрочество. Юность.");
-        bookUpdateDto.setAuthorId(dbAuthors.get(0).getId());
-        bookUpdateDto.setGenreId(dbGenres.get(0).getId());
+        var title = "Детство. Отрочество. Юность.";
+        var bookDto = dbBooks.get(2);
+        var author = dbAuthors.get(1);
+        var genre = dbGenres.get(1);
 
-        mockMvc.perform(put("/book/update").flashAttr("bookUpdateDto", bookUpdateDto))
+        BookUpdateDto bookUpdateDto = new BookUpdateDto(bookDto.getId(),
+                title,
+                author.getId(),
+                genre.getId());
+
+        doReturn(bookDto).when(bookService).update(bookUpdateDto);
+
+        mockMvc.perform(put("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(bookUpdateDto)))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(bookDto)));
 
         verify(bookService, times(1)).update(bookUpdateDto);
     }
@@ -86,10 +114,12 @@ class BookControllerTest {
     @DisplayName("Удалить книгу по id")
     @Test
     void deleteBook() throws Exception {
-        mockMvc.perform(delete("/book/delete").param("id", "1"))
+
+        mockMvc.perform(delete("/api/v1/books/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(status().isOk());
+
         verify(bookService, times(1)).deleteById(1L);
     }
 

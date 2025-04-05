@@ -5,8 +5,6 @@ import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.CommentDto;
-import ru.otus.hw.dto.BookCreateDto;
-import ru.otus.hw.dto.BookUpdateDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
@@ -19,10 +17,6 @@ public interface DtoMapper {
     GenreDto toGenreDto(Genre genre);
 
     BookDto toBookDto(Book book);
-
-    BookCreateDto toBookCreateDto(BookDto bookDto);
-
-    BookUpdateDto toBookUpdateDto(BookDto bookDto);
 
     CommentDto toCommentDto(Comment comment);
 }

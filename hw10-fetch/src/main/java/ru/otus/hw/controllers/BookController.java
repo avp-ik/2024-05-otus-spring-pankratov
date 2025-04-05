@@ -3,16 +3,14 @@ package ru.otus.hw.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import ru.otus.hw.dto.BookCreateDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.BookUpdateDto;
@@ -25,7 +23,8 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@Controller
+@RestController
+@RequestMapping("/api/v1/books")
 public class BookController {
     private final BookService bookService;
 
@@ -35,82 +34,28 @@ public class BookController {
 
     private final DtoMapper dtoMapper;
 
-    @GetMapping("/")
-    public String listPage(Model model) {
-        List<BookDto> bookDtoList = bookService.findAll();
-        model.addAttribute("bookList", bookDtoList);
-
-        return "list";
+    @GetMapping()
+    public List<BookDto> listBooks() {
+        return bookService.findAll();
     }
 
-    @GetMapping("/book")
-    public String getBook(@RequestParam("id") long id, Model model) {
-        if (id == 0) {
-            BookCreateDto bookCreateDto = new BookCreateDto();
-            bookCreateDto.setId(id);
-            fillModelAttributes(model, bookCreateDto);
-        } else {
-            BookUpdateDto bookUpdateDto;
-            bookUpdateDto = dtoMapper.toBookUpdateDto(bookService.findById(id));
-            fillModelAttributes(model, bookUpdateDto);
-        }
-
-
-        return (id == 0) ? "create" : "update";
+    @GetMapping("/{id}")
+    public BookDto getBook(@PathVariable("id") long id) {
+        return bookService.findById(id);
     }
 
-    @PostMapping("/book/create")
-    public String createBook(@Valid @ModelAttribute("bookCreateDto") BookCreateDto bookCreateDto,
-                             BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .forEach(log::warn);
-
-            fillModelAttributes(model, bookCreateDto);
-
-            return "create";
-        }
-
-        bookService.create(bookCreateDto);
-
-        return "redirect:/";
+    @PostMapping()
+    public BookDto createBook(@RequestBody @Valid BookCreateDto bookCreateDto) {
+        return bookService.create(bookCreateDto);
     }
 
-    @PutMapping("/book/update")
-    public String updateBook(@Valid @ModelAttribute("bookUpdateDto") BookUpdateDto bookUpdateDto,
-                             BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .forEach(log::warn);
-
-            fillModelAttributes(model, bookUpdateDto);
-
-            return "update";
-        }
-
-        bookService.update(bookUpdateDto);
-
-        return "redirect:/";
+    @PutMapping()
+    public BookDto updateBook(@RequestBody @Valid BookUpdateDto bookUpdateDto) {
+        return bookService.update(bookUpdateDto);
     }
 
-    @DeleteMapping("/book/delete")
-    public String deleteBook (@RequestParam("id") long id) {
+    @DeleteMapping("/{id}")
+    public void deleteBook (@PathVariable("id") long id) {
         bookService.deleteById(id);
-
-        return "redirect:/";
-    }
-
-    private void fillModelAttributes(Model model, BookCreateDto bookCreateDto) {
-        model.addAttribute("bookCreateDto", bookCreateDto);
-        model.addAttribute("authorList", authorService.findAll());
-        model.addAttribute("genreList", genreService.findAll());
-    }
-
-    private void fillModelAttributes(Model model, BookUpdateDto bookUpdateDto) {
-        model.addAttribute("bookUpdateDto", bookUpdateDto);
-        model.addAttribute("authorList", authorService.findAll());
-        model.addAttribute("genreList", genreService.findAll());
     }
 }

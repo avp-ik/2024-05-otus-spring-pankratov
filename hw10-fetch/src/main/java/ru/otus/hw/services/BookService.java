@@ -11,15 +11,7 @@ public interface BookService {
 
     List<BookDto> findAll();
 
-    BookDto create(String title, long authorId, long genreId);
-
-    BookDto create(BookDto bookDto);
-
     BookDto create(BookCreateDto bookCreateDto);
-
-    BookDto update(long id, String title, long authorId, long genreId);
-
-    BookDto update(BookDto book);
 
     BookDto update(BookUpdateDto bookUpdateDto);
 
