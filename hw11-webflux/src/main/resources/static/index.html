@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>List of all books</title>
+    <!-- https://ru.hexlet.io/qna/html/questions/kak-sdelat-vsplyvayuschee-okno-v-html -->
+    <style>
+        body {
+            padding: 50px;
+        }
+
+        .books {
+            border: 1px solid steelblue;
+            width: 1000px;
+            border-collapse: collapse;
+        }
+
+        .books tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .books td:last-child, td:first-child {
+            width: 50px;
+        }
+
+        h3 {
+            background-image: url("java.jpg");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        .popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 200px;
+            background-color: #fff;
+            border: 1px solid #000;
+            opacity: 1;
+            z-index: 9999;
+        }
+    </style>
+</head>
+
+<body>
+<h3>Books</h3>
+<button onclick="showCreateForm()">Add New Book</button>
+<table id="bookTable" class="books">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genre</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Books will be populated here -->
+    </tbody>
+</table>
+
+<div  id="createForm" style="display: none;" class="popup" >
+    <h3>createForm</h3>
+    <form id="createBookForm">
+        <!-- This part will be filled by JavaScript -->
+    </form>
+</div>
+
+<div id="editForm" style="display: none;" class="popup" >
+    <h3>editForm</h3>
+    <form id="editBookForm">
+        <!-- This part will be filled by JavaScript -->
+    </form>
+</div>
+
+<script>
+    function fetchBooks() {
+        fetch('/api/v1/books')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#bookTable tbody');
+                tableBody.innerHTML = '';
+                data.forEach(book => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${book.id}</td>
+                        <td>${book.title}</td>
+                        <td>${book.author.fullName}</td>
+                        <td>${book.genre.name}</td>
+                        <td>
+                            <button onclick="showEditForm('${book.id}')">Edit</button>
+                            <button onclick="deleteBook('${book.id}')">Delete</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            });
+    }
+    function showCreateForm() {
+        document.getElementById('createForm').style.display = 'block';
+
+        Promise.all([fetch('/api/v1/authors'), fetch('/api/v1/genres')])
+        .then(responses => Promise.all(responses.map(res => res.json())))
+        .then(data => {
+            const editFormTag = document.querySelector('#createBookForm');
+            // alert(JSON.stringify(data));
+            editFormTag.innerHTML = `
+                Id: <input type="text" name="id" value="0" readonly><br>
+                Title: <input type="text" name="title" value="" required><br>
+                Author:
+                <select id="book-author-create" name="authorId">
+                </select><br>
+                Genre:
+                <select id="book-genre-create" name="genreId">
+                </select><br>
+                <button type="submit">Create</button>
+                <button onclick="hideCreateForm()">Cancel</button>
+            `;
+
+            // alert(JSON.stringify(data[0]));
+            const selectAuthorEditTag = document.querySelector('#book-author-create');
+            data[0].forEach(author => {
+                    const option = document.createElement('option');
+                    option.value = author.id;
+                    option.text = author.fullName;
+                    selectAuthorEditTag.appendChild(option);
+                });
+
+            // alert(JSON.stringify(data[1]));
+            const selectGenreEditTag = document.querySelector('#book-genre-create');
+            data[1].forEach(genre => {
+                    const option = document.createElement('option');
+                    option.value = genre.id;
+                    option.text = genre.name;
+                    selectGenreEditTag.appendChild(option);
+                });
+
+            console.log(data);
+            })
+        .catch(error => console.error("Failed to fetch:", error));
+    }
+    function hideCreateForm() {
+        document.getElementById('createForm').style.display = 'none';
+    }
+    document.getElementById('createBookForm').addEventListener('submit', event => {
+        event.preventDefault();
+        const form = event.target;
+        const bookData = {
+            title: form.title.value,
+            authorId: form.authorId.value,
+            genreId: form.genreId.value
+        };
+        // alert(JSON.stringify(bookData));
+        fetch('/api/v1/books', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bookData)
+        }).then(() => {
+            hideCreateForm();
+            fetchBooks();
+        });
+    });
+    document.getElementById('editBookForm').addEventListener('submit', event => {
+        event.preventDefault();
+        const form = event.target;
+        const bookData = {
+            id: form.id.value,
+            title: form.title.value,
+            authorId: form.authorId.value,
+            genreId: form.genreId.value
+        };
+        // alert(JSON.stringify(bookData));
+        fetch('/api/v1/books', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bookData)
+        }).then(() => {
+            hideEditForm();
+            fetchBooks();
+        });
+    });
+    function showEditForm(id) {
+        document.getElementById('editForm').style.display = 'block';
+
+        Promise.all([fetch(`/api/v1/books/${id}`), fetch('/api/v1/authors'), fetch('/api/v1/genres')])
+        .then(responses => Promise.all(responses.map(res => res.json())))
+        .then(data => {
+            const editFormTag = document.querySelector('#editBookForm');
+            // alert(JSON.stringify(data));
+            editFormTag.innerHTML = `
+                Id: <input type="text" name="id" value="${data[0].id}" required><br>
+                Title: <input type="text" name="title" value="${data[0].title}" required><br>
+                Author:
+                <select id="book-author-edit" name="authorId">
+                </select><br>
+                Genre:
+                <select id="book-genre-edit" name="genreId">
+                </select><br>
+                <button type="submit">Edit</button>
+                <button onclick="hideEditForm()">Cancel</button>
+            `;
+
+            // alert(JSON.stringify(data[1]));
+            const selectAuthorEditTag = document.querySelector('#book-author-edit');
+            data[1].forEach(author => {
+                    const option = document.createElement('option');
+                    option.value = author.id;
+                    option.text = author.fullName;
+                    if(data[0].author.id == author.id) option.selected = true;
+                    selectAuthorEditTag.appendChild(option);
+                });
+
+            // alert(JSON.stringify(data[2]));
+            const selectGenreEditTag = document.querySelector('#book-genre-edit');
+            data[2].forEach(genre => {
+                    const option = document.createElement('option');
+                    option.value = genre.id;
+                    option.text = genre.name;
+                    if(data[0].genre.id == genre.id) option.selected = true;
+                    selectGenreEditTag.appendChild(option);
+                });
+
+            console.log(data);
+            })
+        .catch(error => console.error("Failed to fetch:", error));
+    }
+    function hideEditForm() {
+        document.getElementById('editForm').style.display = 'none';
+    }
+    function deleteBook(id) {
+        fetch(`/api/v1/books/${id}`, { method: 'DELETE' })
+            .then(() => fetchBooks());
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchBooks();
+   });
+</script>
+</body>
+</html>
