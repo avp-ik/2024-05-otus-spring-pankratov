@@ -17,7 +17,7 @@ public class HwErrorController implements ErrorController {
         if (status != null) {
             Integer statusCode = Integer.valueOf(status.toString());
 
-            if(statusCode == HttpStatus.FORBIDDEN.value()) {
+            if (statusCode == HttpStatus.FORBIDDEN.value()) {
                 return "error-403";
             }
         }
