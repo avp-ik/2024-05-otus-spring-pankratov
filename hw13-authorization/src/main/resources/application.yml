@@ -29,3 +29,9 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+
+server:
+  error:
+    path: /error
+    whitelabel:
+      enabled: false

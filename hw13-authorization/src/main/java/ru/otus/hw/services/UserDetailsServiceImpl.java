@@ -23,6 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .map(user -> User.builder()
                         .username(user.getUsername())
                         .password(user.getPassword())
+                        .roles(user.getRole())
                         .build()
                 )
                 .orElseThrow(() -> new UsernameNotFoundException("User is not authenticated"));

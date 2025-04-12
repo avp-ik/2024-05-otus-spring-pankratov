@@ -12,7 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.hw.configurations.SecurityConfiguration;
+import ru.otus.hw.security.SecurityConfiguration;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookCreateDto;
 import ru.otus.hw.dto.BookDto;
@@ -39,7 +39,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("Тестирование BookController")
-@WithMockUser(username = "TestUser")
 @WebMvcTest({BookController.class, SecurityConfiguration.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BookControllerTest {
@@ -73,10 +72,25 @@ class BookControllerTest {
         generateTestData();
     }
 
-    @DisplayName("Загрузить список всех книг")
+    @DisplayName("MANAGER Role: Загрузить список всех книг")
     @Test
+    @WithMockUser(username = "TestUser", roles = {"MANAGER"})
     @Order(1)
-    void getAllBooks() throws Exception {
+    void getAllBooksWithManagerRole() throws Exception {
+        doReturn(dbBooks).when(bookService).findAll();
+
+        mockMvc.perform(get("/"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(bookService, times((1))).findAll();
+    }
+
+    @DisplayName("USER Role: Загрузить список всех книг")
+    @Test
+    @WithMockUser(username = "TestUser", roles = {"USER"})
+    @Order(1)
+    void getAllBooksWithUserRole() throws Exception {
         doReturn(dbBooks).when(bookService).findAll();
 
         mockMvc.perform(get("/"))
@@ -98,8 +112,9 @@ class BookControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @DisplayName("Получить книгу")
+    @DisplayName("MANAGER Role: Получить книгу")
     @Test
+    @WithMockUser(username = "TestUser", roles = {"MANAGER"})
     @Order(3)
     void getBook() throws Exception {
         BookDto expectedBook = dbBooks.get(0);
@@ -110,6 +125,19 @@ class BookControllerTest {
                 .andExpect(status().isOk());
 
         verify(bookService, times(1)).findById(expectedBook.getId());
+    }
+
+    @DisplayName("USER Role: Нет доступа к книге")
+    @Test
+    @WithMockUser(username = "TestUser", roles = {"USER"})
+    @Order(3)
+    void doNotGetBookWithUserRole() throws Exception {
+        BookDto expectedBook = dbBooks.get(0);
+        doReturn(expectedBook).when(bookService).findById(expectedBook.getId());
+
+        mockMvc.perform(get("/book").param("id", Long.toString(expectedBook.getId())))
+                .andDo(print())
+                .andExpect(status().isForbidden());
     }
 
     @DisplayName("Unauth: Нет доступа к книге")
@@ -125,8 +153,9 @@ class BookControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @DisplayName("Сохранить новую книгу")
+    @DisplayName("MANAGER Role: Сохранить новую книгу")
     @Test
+    @WithMockUser(username = "TestUser", roles = {"MANAGER"})
     @Order(5)
     void createBook() throws Exception {
         BookCreateDto bookCreateDto = new BookCreateDto(1L,"Война и мир", dbAuthors.get(1).getId(), dbGenres.get(1).getId());
@@ -137,6 +166,18 @@ class BookControllerTest {
                 .andExpect(redirectedUrl("/"));
 
         verify(bookService, times(1)).create(bookCreateDto);
+    }
+
+    @DisplayName("USER Role: Нет возможности создать книгу")
+    @Test
+    @WithMockUser(username = "TestUser", roles = {"USER"})
+    @Order(6)
+    void doNotCreateBookWithUserRole() throws Exception {
+        BookCreateDto bookCreateDto = new BookCreateDto(1L,"Война и мир", dbAuthors.get(1).getId(), dbGenres.get(1).getId());
+
+        mockMvc.perform(post("/book/create").flashAttr("bookCreateDto", bookCreateDto))
+                .andDo(print())
+                .andExpect(status().isForbidden());
     }
 
     @DisplayName("Unauth: Нет возможности создать книгу")
@@ -151,8 +192,9 @@ class BookControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @DisplayName("Сохранить измененную книгу")
+    @DisplayName("MANAGER Role: Сохранить измененную книгу")
     @Test
+    @WithMockUser(username = "TestUser", roles = {"MANAGER"})
     @Order(7)
     void updatedBook() throws Exception {
         BookUpdateDto bookUpdateDto = new BookUpdateDto();
@@ -167,6 +209,22 @@ class BookControllerTest {
                 .andExpect(redirectedUrl("/"));
 
         verify(bookService, times(1)).update(bookUpdateDto);
+    }
+
+    @DisplayName("USER Role: Нет возможности изменить книгу")
+    @Test
+    @WithMockUser(username = "TestUser", roles = {"USER"})
+    @Order(8)
+    void doNotUpdatedBookWithUserRole() throws Exception {
+        BookUpdateDto bookUpdateDto = new BookUpdateDto();
+        bookUpdateDto.setId(dbBooks.get(2).getId());
+        bookUpdateDto.setTitle("Детство. Отрочество. Юность.");
+        bookUpdateDto.setAuthorId(dbAuthors.get(0).getId());
+        bookUpdateDto.setGenreId(dbGenres.get(0).getId());
+
+        mockMvc.perform(put("/book/update").flashAttr("bookUpdateDto", bookUpdateDto))
+                .andDo(print())
+                .andExpect(status().isForbidden());
     }
 
     @DisplayName("Unauth: Нет возможности изменить книгу")
@@ -185,8 +243,9 @@ class BookControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @DisplayName("Удалить книгу по id")
+    @DisplayName("MANAGER Role: Удалить книгу по id")
     @Test
+    @WithMockUser(username = "TestUser", roles = {"MANAGER"})
     @Order(9)
     void deleteBook() throws Exception {
         mockMvc.perform(delete("/book/delete").param("id", "2"))
@@ -194,6 +253,16 @@ class BookControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
         verify(bookService, times(1)).deleteById(2L);
+    }
+
+    @DisplayName("USER Role: Нет возможности удалить книгу")
+    @Test
+    @WithMockUser(username = "TestUser", roles = {"USER"})
+    @Order(10)
+    void doNotDeleteBookWithUserRole() throws Exception {
+        mockMvc.perform(delete("/book/delete").param("id", "2"))
+                .andDo(print())
+                .andExpect(status().isForbidden());
     }
 
     @DisplayName("Unauth: Нет возможности удалить книгу")
