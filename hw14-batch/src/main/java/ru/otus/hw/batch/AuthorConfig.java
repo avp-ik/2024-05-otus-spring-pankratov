@@ -41,6 +41,7 @@ public class AuthorConfig {
 
     @Bean
     public ItemReader<Author> readerAuthor(EntityManagerFactory factory) {
+        // https://stackoverflow.com/questions/72233018/jpa-reader-spring-batch
         return new JpaCursorItemReaderBuilder<Author>()
                 .name(AUTHOR_ITEM_READER_NAME)
                 .entityManagerFactory(factory)
