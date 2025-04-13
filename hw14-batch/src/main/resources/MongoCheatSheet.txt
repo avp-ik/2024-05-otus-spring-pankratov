@@ -1,0 +1,41 @@
+show dbs
+
+use homeworkMongo
+
+show collections
+
+db.authors.find()
+
+// db.dropDatabase()
+
+// db.test.help()
+
+db.products.drop()
+
+db.products.insertOne({ _id: 10, item: "box", qty: 20 })
+
+db.products.insertOne({item: "box", qty: 32 })
+
+db.products.find({ _id: 10})
+
+db.products.find({})
+
+db.products.insertMany([
+   { _id: 10, item: "box", qty: 20 },
+   { _id: 11, item: "box", qty: 13 },
+   { _id: 12, item: "cox", qty: 15 },
+   { _id: 13, item: "fox", qty: 30 }
+])
+
+
+db.products.find({ item: "box"})
+db.products.find({ _id: { $gt: 10 }})
+db.products.find({ _id: { $gt: 10 } }, { _id: 0, item: 1, qty: 1 })
+
+db.products.find().sort({ item: 1 }).limit( 5 )
+db.products.find().limit(5).sort( { item: 1 } )
+
+db.products.aggregate(
+	{$match: {qty: {$ne: 30}}},
+	{$group: {_id: "$item", total: {$sum: "$qty"}}}
+)
