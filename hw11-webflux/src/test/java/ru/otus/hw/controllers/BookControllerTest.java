@@ -107,7 +107,7 @@ class BookControllerTest extends BaseTest {
 
         doReturn(Mono.just(book.getAuthor())).when(authorRepository).findById(book.getAuthor().getId());
         doReturn(Mono.just(book.getGenre())).when(genreRepository).findById(book.getGenre().getId());
-        doReturn(Mono.just(book)).when(bookRepository).save(any(Book.class));
+        doReturn(Mono.just(book)).when(bookRepository).insert(any(Book.class));
 
         webTestClient.post()
                 .uri("/api/v1/books")
@@ -118,7 +118,7 @@ class BookControllerTest extends BaseTest {
                 .expectBody(BookDto.class)
                 .isEqualTo(bookDto);
 
-        verify(bookRepository, times(1)).save(any(Book.class));
+        verify(bookRepository, times(1)).insert(any(Book.class));
     }
 
     @DisplayName("Сохранить измененную книгу")
@@ -138,6 +138,7 @@ class BookControllerTest extends BaseTest {
 
         doReturn(Mono.just(book.getAuthor())).when(authorRepository).findById(book.getAuthor().getId());
         doReturn(Mono.just(book.getGenre())).when(genreRepository).findById(book.getGenre().getId());
+        doReturn(Mono.just(book)).when(bookRepository).findById(book.getId());
         doReturn(Mono.just(book)).when(bookRepository).save(any(Book.class));
 
         webTestClient.put()
@@ -152,6 +153,35 @@ class BookControllerTest extends BaseTest {
         verify(authorRepository, times(1)).findById(book.getAuthor().getId());
         verify(genreRepository, times(1)).findById(book.getGenre().getId());
         verify(bookRepository, times(1)).save(any(Book.class));
+    }
+
+
+    @DisplayName("[404 code] Попытаться изменить несуществующую книгу")
+    @Test
+    void updatedWrongBook() throws Exception {
+        Book book = dbBooks.get(2);
+        book.setTitle("BookTitle_Change");
+        book.setAuthor(dbAuthors.get(0));
+        book.setGenre(dbGenres.get(0));
+
+        BookDto bookDto = dtoMapper.toBookDto(book);
+
+        BookUpdateDto bookUpdateDto = new BookUpdateDto(book.getId(),
+                book.getTitle(),
+                book.getAuthor().getId().toString(),
+                book.getGenre().getId().toString());
+
+        doReturn(Mono.just(book.getAuthor())).when(authorRepository).findById(book.getAuthor().getId());
+        doReturn(Mono.just(book.getGenre())).when(genreRepository).findById(book.getGenre().getId());
+        doReturn(Mono.just(book)).when(bookRepository).save(any(Book.class));
+        doReturn(Mono.empty()).when(bookRepository).findById(book.getId());
+
+        webTestClient.put()
+                .uri("/api/v1/books")
+                .body(BodyInserters.fromValue(bookUpdateDto))
+                .exchange()
+                .expectStatus()
+                .isNotFound();
     }
 
     @DisplayName("Удалить книгу по id")
