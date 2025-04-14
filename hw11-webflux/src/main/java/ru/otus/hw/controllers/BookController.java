@@ -75,7 +75,8 @@ public class BookController {
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler(EntityNotFoundException.class)
-    public void handleException1() {
+    public String handleException(EntityNotFoundException exception) {
+        return exception.getMessage();
     }
 
     private Mono<BookDto> add(String title, String authorId, String genreId) {

@@ -183,7 +183,11 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(bookData)
-        }).then(() => {
+        })
+        .then((response) => {
+            if (response.status != '200') {
+                response.text().then(txt => alert(response.status + ' ' + txt));
+            }
             hideEditForm();
             fetchBooks();
         });
