@@ -1,0 +1,56 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:maindb
+
+  sql:
+    init:
+      mode: always
+      #data-locations: data.sql
+      #schema-locations: schema.sql
+  h2:
+    console:
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: homeworkMongo
+
+  shell:
+    interactive:
+      enabled: true
+    noninteractive:
+      enabled: false
+
+    command:
+      version:
+        enabled: false
+
+  output:
+    ansi:
+      enabled: always
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+#mongock:
+#  runner-type: "InitializingBean"
+#  change-logs-scan-package:
+#    - ru.otus.hw.changelogs
+#  mongo-db:
+#    write-concern:
+#      journal: false
+#    read-concern: local
+
+logging:
+  level:
+#    com.github.cloudyrock.mongock: INFO
+    root: ERROR
