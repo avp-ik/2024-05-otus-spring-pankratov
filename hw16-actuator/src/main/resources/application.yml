@@ -1,6 +1,7 @@
 spring:
   datasource:
     url: jdbc:h2:mem:maindb
+
   sql:
     init:
       mode: always
@@ -29,3 +30,24 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "metrics,health,logfile"
+#  endpoint:
+#    health:
+#      show-details: when_authorized
+#      roles: "ADMIN"
+  health:
+    defaults:
+      enabled: true
+  jmx:
+    enabled: true
+
+logging:
+  level:
+    ROOT: DEBUG
+  file:
+    name: ./logs/hw16-actuator.log
