@@ -10,8 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import ru.otus.hw.actuator.BookRequestCounter;
 import ru.otus.hw.dto.*;
-import ru.otus.hw.mappers.DtoMapper;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
@@ -42,7 +42,7 @@ class BookControllerTest {
     private GenreService genreService;
 
     @MockBean
-    private DtoMapper dtoMapper;
+    private BookRequestCounter bookRequestCounter;
 
     private List<AuthorDto> dbAuthors = new ArrayList<>();
 
