@@ -27,7 +27,6 @@ import java.util.List;
 public class BookController {
     private final BookService bookService;
 
-    @Autowired
     private final BookRequestCounter bookRequestCounter;
 
     @GetMapping()
