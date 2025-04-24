@@ -11,16 +11,14 @@ import java.security.SecureRandom;
 
 @Component
 @RequiredArgsConstructor
-public class GetCorrectBookHealthIndicator implements HealthIndicator {
+public class CorrectBookHealthIndicator implements HealthIndicator {
 
     private final BookRepository bookRepository;
 
     @Override
     public Health health() {
         try {
-            SecureRandom secureRandom = new SecureRandom();
-
-            Long bookId = secureRandom.nextLong(bookRepository.count());
+            Long bookId = getBookIdToCheck();
 
             if (bookRepository.findById(bookId).isPresent()) {
                 return Health.up().status(Status.UP)
@@ -33,5 +31,11 @@ public class GetCorrectBookHealthIndicator implements HealthIndicator {
             return Health.down().status(Status.DOWN)
                     .withDetail("message", e.getMessage()).build();
         }
+    }
+
+    public long getBookIdToCheck() {
+        SecureRandom secureRandom = new SecureRandom();
+
+        return secureRandom.nextLong(bookRepository.count());
     }
 }

@@ -19,12 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 
 
-@SpringBootTest(classes = {GetCorrectBookHealthIndicator.class})
-@DisplayName("Тестирование GetCorrectBookHealthIndicator")
-class GetCorrectBookHealthIndicatorTest {
+@SpringBootTest(classes = {CorrectBookHealthIndicator.class})
+@DisplayName("Тестирование CorrectBookHealthIndicator")
+class CorrectBookHealthIndicatorTest {
 
     @Autowired
-    private GetCorrectBookHealthIndicator getCorrectBookHealthIndicator;
+    private CorrectBookHealthIndicator correctBookHealthIndicator;
 
     @MockBean
     private AuthorRepository authorRepository;
@@ -46,7 +46,7 @@ class GetCorrectBookHealthIndicatorTest {
         doReturn(optionalBook).when(bookRepository).findById(0L);
         doReturn(optionalBook).when(bookRepository).findById(1L);
 
-        Health health = getCorrectBookHealthIndicator.health();
+        Health health = correctBookHealthIndicator.health();
         assertEquals(Status.UP, health.getStatus());
     }
 }
