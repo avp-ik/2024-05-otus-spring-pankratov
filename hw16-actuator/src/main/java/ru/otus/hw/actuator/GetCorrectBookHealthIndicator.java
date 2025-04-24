@@ -17,16 +17,21 @@ public class GetCorrectBookHealthIndicator implements HealthIndicator {
 
     @Override
     public Health health() {
-        SecureRandom secureRandom = new SecureRandom();
+        try {
+            SecureRandom secureRandom = new SecureRandom();
 
-        Long bookId = secureRandom.nextLong(bookRepository.count() * 2) + 1;
+            Long bookId = secureRandom.nextLong(bookRepository.count());
 
-        if (bookRepository.findById(bookId).isPresent()) {
-            return Health.up().status(Status.UP)
-                    .withDetail("message", "ОК!").build();
-        } else {
+            if (bookRepository.findById(bookId).isPresent()) {
+                return Health.up().status(Status.UP)
+                        .withDetail("message", "ОК!").build();
+            } else {
+                return Health.down().status(Status.DOWN)
+                        .withDetail("message", "Не существует книги по запрошенному идентификатору!").build();
+            }
+        } catch (Exception e) {
             return Health.down().status(Status.DOWN)
-                    .withDetail("message", "Не существует книги по запрошенному идентификатору!").build();
+                    .withDetail("message", e.getMessage()).build();
         }
     }
 }
