@@ -1,0 +1,30 @@
+docker image ls
+docker pull hello-world
+docker image ls
+docker image rm hello-world
+docker ps
+docker run hello-world
+docker ps
+docker run hello-world
+docker ps -all
+docker run --rm hello-world
+
+docker run -it --name=ubuntu-run ubuntu bash
+docker start ubuntu-run
+docker exec -it ubuntu-run bash
+
+docker run -d -p:8080:80 --name=my-nginx nginx
+docker ps -a
+curl http://localhost:8080
+docker kill my-nginx
+docker rm my-nginx
+
+# Команды ниже следует выполнять в рабочей папке с файлом docker-compose.yml
+docker compose up -d
+docker compose ps -a
+docker compose down
+
+# При сборке файлов в исполняемый jar и его запуска могут возникать проблемы
+# с кодировкой данных из миграционных скриптов.
+# В этом случае запуск следует производить с ключом -Dfile.encoding=utf-8.
+java "-Dfile.encoding=utf-8" -jar target\hw17-docker-0.0.1-SNAPSHOT.jar
