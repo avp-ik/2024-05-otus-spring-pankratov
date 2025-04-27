@@ -6,9 +6,11 @@ import ru.otus.hw.models.mongo.CommentDocument;
 
 @Component
 public class CommentConverter {
+
     public String commentToString(CommentDocument comment) {
         return "CommentDocument | Id: %s, Text: %s".formatted(comment.getId(), comment.getText());
     }
+
     public String commentToString(Comment comment) {
         return "Comment | Id: %s, Text: %s".formatted(comment.getId(), comment.getText());
     }
