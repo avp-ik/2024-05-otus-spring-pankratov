@@ -5,6 +5,8 @@ import ru.otus.hw.models.Caterpillar;
 import ru.otus.hw.models.Chrysalis;
 import ru.otus.hw.models.Egg;
 
+import java.util.Collection;
+
 public interface IncubatorService {
     Caterpillar transformToCaterpillar(Egg egg);
 
@@ -12,6 +14,5 @@ public interface IncubatorService {
 
     Butterfly transformToButterfly(Chrysalis chrysalis);
 
-    void runProcess();
+    Collection<Butterfly> runProcess(Collection<Egg> eggs);
 }
-

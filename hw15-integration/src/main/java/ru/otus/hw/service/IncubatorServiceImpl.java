@@ -56,18 +56,11 @@ public class IncubatorServiceImpl implements IncubatorService {
         }
     }
 
-    public void runProcess() {
-        var eggs = List.of(
-                new Egg("Red admiral"),
-                new Egg("Small tortoiseshell"),
-                new Egg("Peacock butterfly"),
-                new Egg("Morpho"),
-                new Egg("Burnet moth"),
-                new Egg("Painted lady"),
-                new Egg("Swallowtail butterfly")
-        );
+    public Collection<Butterfly> runProcess(Collection<Egg> eggs) {
 
         Collection<Butterfly> butterflies = butterflyIncubatorGateway.process(eggs);
         log.info(butterflies.toString());
+
+        return butterflies;
     }
 }
