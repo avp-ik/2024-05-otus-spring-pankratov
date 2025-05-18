@@ -10,6 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -32,7 +34,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("Тестирование BookController")
+@DisplayName("Модульный тест BookController")
 @WebMvcTest(BookController.class)
 class BookControllerTest {
 
@@ -63,6 +65,21 @@ class BookControllerTest {
     @BeforeEach
     void setUp() {
         generateTestData();
+    }
+
+    @DisplayName("Получить книги")
+    @Test
+    void listBooks() throws Exception {
+
+        doReturn(dbBooks).when(bookService).findAll();
+
+        mockMvc.perform(get("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(dbBooks)));
+
+        verify(bookService, times(1)).findAll();
     }
 
     @DisplayName("Сохранить новую книгу")

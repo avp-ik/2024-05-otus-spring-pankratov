@@ -1,5 +1,64 @@
-spring:
+server:
+  port: 8081
 
+library-service:
+  url: http://localhost:8080
+
+spring:
   output:
     ansi:
       enabled: always
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  data:
+    rest:
+      basePath: /datarest
+
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+        alphanumeric-ids:
+          enabled: true
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 100
+        permittedNumberOfCallsInHalfOpenState: 10
+        waitDurationInOpenState: 10000
+        failureRateThreshold: 60
+        eventConsumerBufferSize: 10
+        registerHealthIndicator: true
+    instances:
+      book-service:
+        baseConfig: default
+      author-service:
+        baseConfig: default
+      genre-service:
+        baseConfig: default
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "metrics,health,logfile,prometheus"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
+  jmx:
+    enabled: true
+
+logging:
+  level:
+    ROOT: DEBUG
+  file:
+    name: ./logs/hw16-actuator.log
