@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +15,7 @@ public class DataForDocument {
 
     private String template;
 
-    private HashMap<String, String> data;
+    private Map<String, String> data;
 
     private Document document;
 }

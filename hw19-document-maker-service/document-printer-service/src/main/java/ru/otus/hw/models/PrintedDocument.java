@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Data
@@ -18,7 +18,7 @@ public class PrintedDocument {
 
     private String template;
 
-    private HashMap<String, String> data;
+    private Map<String, String> data;
 
     private String url;
 
