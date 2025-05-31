@@ -11,11 +11,11 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Document {
 
-    UUID id;
+    private UUID id;
 
-    String name;
+    private String name;
 
-    byte[] body;
+    private byte[] body;
 
-    String message;
+    private String message;
 }

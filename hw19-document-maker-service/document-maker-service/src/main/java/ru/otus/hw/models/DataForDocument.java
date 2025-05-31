@@ -11,12 +11,11 @@ import java.util.HashMap;
 @NoArgsConstructor
 public class DataForDocument {
 
-    String name;
+    private String name;
 
-    String template;
+    private String template;
 
-    HashMap<String, String> data;
+    private HashMap<String, String> data;
 
-    Document document;
-
+    private Document document;
 }

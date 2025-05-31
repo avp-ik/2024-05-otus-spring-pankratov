@@ -12,15 +12,15 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PrintedDocument {
 
-    UUID id;
+    private UUID id;
 
-    String name;
+    private String name;
 
-    String template;
+    private String template;
 
-    HashMap<String, String> data;
+    private HashMap<String, String> data;
 
-    String url;
+    private String url;
 
-    byte[] body;
+    private byte[] body;
 }

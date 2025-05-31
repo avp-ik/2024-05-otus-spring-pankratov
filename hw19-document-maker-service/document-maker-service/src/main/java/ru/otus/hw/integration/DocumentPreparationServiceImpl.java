@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.feign.DocumentPrintService;
 import ru.otus.hw.models.DataForDocument;
-import ru.otus.hw.models.Document;
 import ru.otus.hw.models.PrintedDocument;
 
 import java.util.Collection;
@@ -17,7 +16,7 @@ public class DocumentPreparationServiceImpl implements DocumentPreparationServic
 
     private final DocumentPreparationGateway documentPreparationGateway;
 
-    final private DocumentPrintService documentPrintService;
+    private final DocumentPrintService documentPrintService;
 
     @Override
     public DataForDocument transformToPrintedDocument(DataForDocument dataForDocument) {
@@ -39,8 +38,20 @@ public class DocumentPreparationServiceImpl implements DocumentPreparationServic
     public DataForDocument transformToSignedDocument(DataForDocument dataForDocument) {
         log.info("Transform the data to signed document for {}...", dataForDocument.getName());
 
+        // Not implemented yet.
 
         log.info("The signed document was created fot {}.", dataForDocument.getName());
+
+        return dataForDocument;
+    }
+
+    @Override
+    public DataForDocument transformToChangedDocument(DataForDocument dataForDocument) {
+        log.info("Transform the data to changed document for {}...", dataForDocument.getName());
+
+        // Not implemented yet.
+
+        log.info("The changed document was created fot {}.", dataForDocument.getName());
 
         return dataForDocument;
     }

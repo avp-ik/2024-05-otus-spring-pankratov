@@ -3,7 +3,6 @@ package ru.otus.hw.integration;
 import org.springframework.integration.annotation.Gateway;
 import org.springframework.integration.annotation.MessagingGateway;
 import ru.otus.hw.models.DataForDocument;
-import ru.otus.hw.models.Document;
 
 import java.util.Collection;
 

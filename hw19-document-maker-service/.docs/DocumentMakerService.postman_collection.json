@@ -8,7 +8,7 @@
 	},
 	"item": [
 		{
-			"name": "document-store-service POST",
+			"name": "document-store-service",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -18,7 +18,7 @@
 						{
 							"key": "file",
 							"type": "file",
-							"src": "/C:/_Code/Otus/2024-05-otus-spring-pankratov/hw19-document-maker-service/document-store-service/src/main/resources/sample.pdf"
+							"src": "/C:/_Code/Otus/2024-05-otus-spring-pankratov/hw19-document-maker-service/.docs/dummy.pdf"
 						}
 					]
 				},
@@ -38,7 +38,7 @@
 			"response": []
 		},
 		{
-			"name": "document-store-service GET",
+			"name": "document-store-service",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -59,7 +59,7 @@
 					]
 				},
 				"url": {
-					"raw": "localhost:8080/api/v1/docs/c6811623-e64a-47cc-8f5f-202783bc9523",
+					"raw": "localhost:8080/api/v1/docs/0d9d3159-c447-4a76-bccb-e7e6773ee5e4",
 					"host": [
 						"localhost"
 					],
@@ -68,14 +68,14 @@
 						"api",
 						"v1",
 						"docs",
-						"c6811623-e64a-47cc-8f5f-202783bc9523"
+						"0d9d3159-c447-4a76-bccb-e7e6773ee5e4"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "document-print-service POST",
+			"name": "document-print-service",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -90,7 +90,12 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"id\":null,\"name\":\"71d5fa8e-f3c9-47e7-9a91-44ea72ed2972\",\"template\":\"templates/base_form.html\",\"data\":{\"from\":\"Masha\",\"to\":\"Sasha\"},\"url\":\"https://localhost:8080/api/v1/docs/71d5fa8e-f3c9-47e7-9a91-44ea72ed2972\"}"
+					"raw": "{\r\n    \"id\": null,\r\n    \"name\": \"71d5fa8e-f3c9-47e7-9a91-44ea72ed2972\",\r\n    \"template\": \"templates/base_form.html\",\r\n    \"data\": {\r\n        \"firstName\": \"Ivan\",\r\n        \"middleName\": \"Ivanovich\",\r\n        \"lastName\": \"Ivanov\"\r\n    },\r\n    \"url\": \"https://localhost:8080/api/v1/docs/71d5fa8e-f3c9-47e7-9a91-44ea72ed2972\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
 					"raw": "localhost:8081/api/v1/printedDocs",
@@ -108,7 +113,7 @@
 			"response": []
 		},
 		{
-			"name": "document-print-service GET",
+			"name": "document-print-service",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -129,7 +134,7 @@
 					"raw": "{\"id\":null,\"name\":\"71d5fa8e-f3c9-47e7-9a91-44ea72ed2972\",\"template\":\"templates/base_form.html\",\"data\":{\"from\":\"Masha\",\"to\":\"Sasha\"},\"url\":\"https://localhost:8080/api/v1/docs/71d5fa8e-f3c9-47e7-9a91-44ea72ed2972\"}"
 				},
 				"url": {
-					"raw": "localhost:8081/api/v1/printedDocs/358c3f71-f28a-49a6-8dd8-852dd273165a",
+					"raw": "localhost:8081/api/v1/printedDocs/5bf4b219-3971-4b05-8f9c-b42206de3f2b",
 					"host": [
 						"localhost"
 					],
@@ -138,14 +143,14 @@
 						"api",
 						"v1",
 						"printedDocs",
-						"358c3f71-f28a-49a6-8dd8-852dd273165a"
+						"5bf4b219-3971-4b05-8f9c-b42206de3f2b"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "document-maker-service GET",
+			"name": "document-maker-service",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -169,29 +174,6 @@
 			"response": []
 		},
 		{
-			"name": "document-maker-service GET FOO",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8082/api/v1/docs",
-					"host": [
-						"localhost"
-					],
-					"port": "8082",
-					"path": [
-						"api",
-						"v1",
-						"docs"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "document-maker-service  Create",
 			"request": {
 				"auth": {
@@ -207,7 +189,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Monthly Report\",\r\n    \"template\": \"templates/base_form.html\",\r\n    \"data\": {\r\n        \"to\": \"Sasha\",\r\n        \"2\": \"Masha\"\r\n    },\r\n    \"document\": {\r\n        \"id\": null,\r\n        \"name\": null,\r\n        \"body\": null,\r\n        \"message\": null\r\n    }\r\n}",
+					"raw": "{\r\n    \"name\": \"Monthly Report\",\r\n    \"template\": \"templates/base_form.html\",\r\n    \"data\": {\r\n        \"firstName\": \"Ivanko\",\r\n        \"middleName\": \"Ivanovich\",\r\n        \"lastName\": \"Ivanov\"\r\n    },\r\n    \"document\": {\r\n        \"id\": null,\r\n        \"name\": null,\r\n        \"body\": null,\r\n        \"message\": null\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -307,7 +289,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"username\": \"User1\",\r\n  \"email\": \"user@mail.ru\",\r\n  \"password\": \"mystrongpassword\"\r\n}",
+					"raw": "{\r\n  \"username\": \"UserForDemo\",\r\n  \"email\": \"user@mail.ru\",\r\n  \"password\": \"mystrongpassword\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -375,7 +357,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9VU0VSIiwiaWQiOjEsImVtYWlsIjoidXNlckBtYWlsLnJ1Iiwic3ViIjoiVXNlcjEiLCJpYXQiOjE3NDg2Nzk4NDYsImV4cCI6MTc0ODgyMzg0Nn0.xYoZu7omrQy1fNLmh4C-gp8AhQDEeMokGSZqVqoPF3c",
 							"type": "string"
 						}
 					]
@@ -383,7 +365,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8083/api/v1/docs/c431f28d-6d84-4b1b-8e0d-fdb3c96ff3fd",
+					"raw": "localhost:8083/api/v1/docs/6b7ee3c1-1e03-4681-8681-22561c16e7e9",
 					"host": [
 						"localhost"
 					],
@@ -392,7 +374,7 @@
 						"api",
 						"v1",
 						"docs",
-						"c431f28d-6d84-4b1b-8e0d-fdb3c96ff3fd"
+						"6b7ee3c1-1e03-4681-8681-22561c16e7e9"
 					]
 				}
 			},

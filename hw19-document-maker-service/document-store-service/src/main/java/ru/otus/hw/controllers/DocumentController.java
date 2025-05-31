@@ -9,19 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ru.otus.hw.models.Document;
 import ru.otus.hw.services.DocumentService;
 
-import javax.print.Doc;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 
 // https://habr.com/ru/articles/675716/
@@ -57,7 +50,8 @@ public class DocumentController {
     }
 
     //@PostMapping(value = "/api/v1/docs", produces = "application/pdf")
-    @PostMapping(value = "/api/v1/docs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/api/v1/docs",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Document> upload(@RequestPart("file") MultipartFile file) {
 
         Document document = new Document();
@@ -68,9 +62,7 @@ public class DocumentController {
                 document.setMessage("Please upload a file!");
                 return new ResponseEntity<Document>(document, HttpStatus.BAD_REQUEST);
             }
-
             document.setBody(file.getBytes());
-
             document = documentService.put(document);
 
             HttpHeaders headers = new HttpHeaders();

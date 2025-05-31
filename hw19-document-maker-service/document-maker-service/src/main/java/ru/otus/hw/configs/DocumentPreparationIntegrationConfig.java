@@ -14,7 +14,9 @@ import ru.otus.hw.integration.DocumentPreparationService;
 public class DocumentPreparationIntegrationConfig {
 
     @Bean
-    public MessageChannelSpec<?, ?> documentPreparationChannel() { return MessageChannels.queue(5); }
+    public MessageChannelSpec<?, ?> documentPreparationChannel() {
+        return MessageChannels.queue(5);
+    }
 
     @Bean
     public MessageChannelSpec<?, ?> documentChannel() {

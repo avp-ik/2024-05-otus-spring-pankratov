@@ -3,7 +3,6 @@ package ru.otus.hw.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -14,10 +13,6 @@ import ru.otus.hw.models.Document;
 import ru.otus.hw.models.PrintedDocument;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -63,7 +58,7 @@ public class PrintedDocumentServiceImpl implements PrintedDocumentService {
         templateEngine.setTemplateResolver(templateResolver);
 
         Context context = new Context();
-        for(Map.Entry<String, String> entry : data.entrySet()) {
+        for (Map.Entry<String, String> entry : data.entrySet()) {
             context.setVariable(entry.getKey(), entry.getValue());
         }
 

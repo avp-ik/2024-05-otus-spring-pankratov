@@ -14,7 +14,6 @@ import ru.otus.hw.models.DataForDocument;
 import ru.otus.hw.models.Document;
 import ru.otus.hw.services.DocumentMakerService;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 @Slf4j
@@ -25,25 +24,6 @@ public class DocumentMakerController {
 
     private final DocumentMakerService documentMakerService;
 
-    @GetMapping()
-    public DataForDocument getDataForDocument() {
-
-        DataForDocument dataForDocument = new DataForDocument();
-        dataForDocument.setName("Monthly Report");
-        dataForDocument.setTemplate("templates/base_form.html");
-
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("1", "Sasha");
-        hashMap.put("2", "Masha");
-
-        dataForDocument.setData(hashMap);
-
-        Document document = new Document();
-        dataForDocument.setDocument(document);
-
-        return dataForDocument;
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getDocument(@PathVariable("id") UUID id) {
 
@@ -52,8 +32,6 @@ public class DocumentMakerController {
 
     @PostMapping()
     public Document createDocument(@RequestBody @Valid DataForDocument dataForDocument) {
-
         return documentMakerService.createDocument(dataForDocument);
-        // {"name":"Monthly Report","template":"templates/base_form.html","data":{"1":"Sasha","2":"Masha"},"document":{"id":null,"name":null,"body":null,"message":null}}
     }
 }
