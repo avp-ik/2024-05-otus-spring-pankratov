@@ -13,7 +13,6 @@ import ru.otus.hw.models.Document;
 import ru.otus.hw.models.PrintedDocument;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -48,7 +47,7 @@ public class PrintedDocumentServiceImpl implements PrintedDocumentService {
         return resultDocument;
     }
 
-    private String parseThymeleafTemplate(String templateName, HashMap<String, String> data) {
+    private String parseThymeleafTemplate(String templateName, Map<String, String> data) {
 
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setSuffix(".html");
