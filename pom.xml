@@ -29,5 +29,6 @@
         <module>hw16-actuator</module>
         <module>hw17-docker</module>
         <module>hw18-resilience4j</module>
+        <module>hw19-document-maker-service</module>
     </modules>
 </project>

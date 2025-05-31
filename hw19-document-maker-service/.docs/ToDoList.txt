@@ -1,0 +1,11 @@
+!- OpenAPI в auth-gateway-service.
+!- Actuator в auth-gateway-service.
+!- Circuite Breaker в auth-gateway-service.
+!- Перевод auth-gateway-service на PostgreSQL.
+!- Docker и Docker Compose.
+- Тесты для auth-gateway-service.
+- Во всех оставшихся проектах OpenAPI.
+- Во всех оставшихся проектах Actuator.
+- Во всех оставшихся проектах Tests.
+- Bean Validation в auth-gateway-service.
+- Поправить шаблон.
