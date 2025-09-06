@@ -1,0 +1,14 @@
+!- OpenAPI в auth-gateway-service.
+!- Actuator в auth-gateway-service.
+!- Circuite Breaker в auth-gateway-service.
+!- Перевод auth-gateway-service на PostgreSQL.
+!- Docker и Docker Compose.
+!- Поправить шаблон.
+- Убрать лишние файлы в проектах
+- Тесты для auth-gateway-service.
+- Во всех оставшихся проектах OpenAPI.
+- Во всех оставшихся проектах Actuator.
+- Во всех оставшихся проектах Tests.
+- Bean Validation в auth-gateway-service.
+- Из класса Document убрать поле Message в класс ResponseEntity (?).
+- Рассмотреть конфигурацию MinioClient через Spring Component/Config.

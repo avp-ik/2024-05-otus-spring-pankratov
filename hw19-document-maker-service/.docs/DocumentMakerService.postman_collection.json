@@ -1,0 +1,384 @@
+{
+	"info": {
+		"_postman_id": "41963a66-20ec-4f5c-9bac-accc914ec312",
+		"name": "DocumentMakerService",
+		"description": "1. Перед началом демонстрации обязательно войти в облачное хранилище [https://play.min.io/](https://play.min.io/)\n    \n2. Далее запускать сервисы согласно сценарию.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34336476"
+	},
+	"item": [
+		{
+			"name": "document-store-service",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/_Code/Otus/2024-05-otus-spring-pankratov/hw19-document-maker-service/.docs/dummy.pdf"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/docs",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"docs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "document-store-service",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/_Code/Otus/2024-05-otus-spring-pankratov/hw19-document-maker-service/document-store-service/src/main/resources/sample.pdf"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/docs/0d9d3159-c447-4a76-bccb-e7e6773ee5e4",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"docs",
+						"0d9d3159-c447-4a76-bccb-e7e6773ee5e4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "document-print-service",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": null,\r\n    \"name\": \"71d5fa8e-f3c9-47e7-9a91-44ea72ed2972\",\r\n    \"template\": \"templates/base_form.html\",\r\n    \"data\": {\r\n        \"firstName\": \"Ivan\",\r\n        \"middleName\": \"Ivanovich\",\r\n        \"lastName\": \"Ivanov\"\r\n    },\r\n    \"url\": \"https://localhost:8080/api/v1/docs/71d5fa8e-f3c9-47e7-9a91-44ea72ed2972\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/api/v1/printedDocs",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"printedDocs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "document-print-service",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\":null,\"name\":\"71d5fa8e-f3c9-47e7-9a91-44ea72ed2972\",\"template\":\"templates/base_form.html\",\"data\":{\"from\":\"Masha\",\"to\":\"Sasha\"},\"url\":\"https://localhost:8080/api/v1/docs/71d5fa8e-f3c9-47e7-9a91-44ea72ed2972\"}"
+				},
+				"url": {
+					"raw": "localhost:8081/api/v1/printedDocs/5bf4b219-3971-4b05-8f9c-b42206de3f2b",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"printedDocs",
+						"5bf4b219-3971-4b05-8f9c-b42206de3f2b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "document-maker-service",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8082/api/v1/docs/0129a90b-ff44-44d7-84c6-eae76d5309f0",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"docs",
+						"0129a90b-ff44-44d7-84c6-eae76d5309f0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "document-maker-service  Create",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Monthly Report\",\r\n    \"template\": \"templates/base_form.html\",\r\n    \"data\": {\r\n        \"firstName\": \"Ivanko\",\r\n        \"middleName\": \"Ivanovich\",\r\n        \"lastName\": \"Ivanov\"\r\n    },\r\n    \"document\": {\r\n        \"id\": null,\r\n        \"name\": null,\r\n        \"body\": null,\r\n        \"message\": null\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/api/v1/docs",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"docs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth-gateway-service Sign-up",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"User1\",\r\n  \"email\": \"user@mail.ru\",\r\n  \"password\": \"mystrongpassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8083/auth/sign-up",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"auth",
+						"sign-up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth-gateway-service Sign-in",
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "payload",
+							"value": "{}",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "Bearer",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"UserForDemo\",\r\n  \"email\": \"user@mail.ru\",\r\n  \"password\": \"mystrongpassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8083/auth/sign-in",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"auth",
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth-gateway-service Create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9VU0VSIiwiaWQiOjEsImVtYWlsIjoidXNlckBtYWlsLnJ1Iiwic3ViIjoiVXNlcjEiLCJpYXQiOjE3NDg2NDgwMDgsImV4cCI6MTc0ODc5MjAwOH0.9VvUZ8gvZIe8qJuQdjl0x1fv1h0my9B7m9h9jUQ2_qA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Monthly Report\",\r\n    \"template\": \"templates/base_form.html\",\r\n    \"data\": {\r\n        \"firstName\": \"Ivan\",\r\n        \"middleName\": \"Ivanovich\",\r\n        \"lastName\": \"Ivanov\"\r\n    },\r\n    \"document\": {\r\n        \"id\": null,\r\n        \"name\": null,\r\n        \"body\": null,\r\n        \"message\": null\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8083/api/v1/docs",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"v1",
+						"docs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth-gateway-service Get",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9VU0VSIiwiaWQiOjEsImVtYWlsIjoidXNlckBtYWlsLnJ1Iiwic3ViIjoiVXNlcjEiLCJpYXQiOjE3NDg2Nzk4NDYsImV4cCI6MTc0ODgyMzg0Nn0.xYoZu7omrQy1fNLmh4C-gp8AhQDEeMokGSZqVqoPF3c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8083/api/v1/docs/6b7ee3c1-1e03-4681-8681-22561c16e7e9",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"v1",
+						"docs",
+						"6b7ee3c1-1e03-4681-8681-22561c16e7e9"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

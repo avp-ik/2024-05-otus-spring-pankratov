@@ -1,0 +1,43 @@
+server:
+  port: 8082
+  max-http-request-header-size: 2048KB
+
+document-store-service:
+  url: http://localhost:8080
+
+document-print-service:
+  url: http://localhost:8081
+
+spring:
+  output:
+    ansi:
+      enabled: always
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  data:
+    rest:
+      basePath: /datarest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "metrics,health,logfile,prometheus"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
+  jmx:
+    enabled: true
+
+logging:
+  level:
+    ROOT: DEBUG
+  file:
+    name: ./logs/hw16-actuator.log

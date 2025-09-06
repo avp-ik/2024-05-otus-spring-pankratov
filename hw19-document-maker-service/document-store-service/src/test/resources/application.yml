@@ -1,0 +1,8 @@
+server:
+  port: 8080
+  max-http-header-size: 2048KB
+
+spring:
+  output:
+    ansi:
+      enabled: always
